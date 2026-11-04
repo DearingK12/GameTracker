@@ -35,11 +35,11 @@ The SQLite database is stored in the user's application data folder: `~/Library/
 
 ## Downloadable builds
 
-[Download for Mac (Apple Silicon)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.1-macOS-arm64.dmg) ·
-[Download for Mac (Intel)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.1-macOS-x86_64.dmg) ·
-[Download for Windows (64-bit)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.1-Windows-x64.zip)
+[Download for Mac (Apple Silicon)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.2-macOS-arm64.dmg) ·
+[Download for Mac (Intel)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.2-macOS-x86_64.dmg) ·
+[Download for Windows (64-bit)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.2-Windows-x64.zip)
 
-These links download the latest release files directly. The first release is created by pushing a version tag such as `v1.0.1`; after that, use a new version for subsequent releases. You can also run **Package desktop downloads** manually from the repository's **Actions** tab; those files are available as workflow artifacts.
+These links download the latest release files directly. The first release is created by pushing a version tag such as `v1.0.2`; after that, use a new version for subsequent releases. You can also run **Package desktop downloads** manually from the repository's **Actions** tab; those files are available as workflow artifacts.
 
 To package locally, run `bash scripts/package-macos.sh` on macOS or `.\scripts\package-windows.ps1` on Windows. The Windows archive contains a self-contained app image; extract it and launch `GameTracker.exe`.
 The Mac disk image opens to a custom install screen titled **Game Tracker**, with an arrow showing where to drag the app: the **Applications** folder.
