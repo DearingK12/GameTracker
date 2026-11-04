@@ -1,0 +1,15 @@
+# Maven build output and packaged downloads
+/target/
+/dist/
+
+# Local game data
+game-tracker.db
+game-tracker.db-shm
+game-tracker.db-wal
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
