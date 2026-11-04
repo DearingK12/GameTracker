@@ -1,27 +1,29 @@
 # Game Tracker
 
-A dark-themed Java desktop dashboard for combining gaming playtime across launchers. It stores data in a local SQLite database and can keep tracking while its window is hidden.
+A dark-themed Java desktop dashboard for combining gaming playtime from multiple launchers. It stores data in a local SQLite database and can keep tracking while its window is hidden.
 
 ## Features
 
-- Lifetime hours and a game library across Steam, EA, Battle.net, Epic Games, Ubisoft Connect, GOG, and other platforms
+- Lifetime hours and game library across Steam, EA, Battle.net, Epic Games, Ubisoft Connect, GOG, and other platforms
 - Most-played games, recent session history, and locally tracked weekly/monthly totals
-- Manual sessions and automatic game process detection, polled every 10 seconds
-- Optional per-game executable names for process detection
-- Persistent session history with periodic checkpoints and interrupted-session recovery
-- Manual historical hours and Steam lifetime playtime import through Steam's GetOwnedGames Web API
-- Background operation via the system tray where supported
-- Local database with owner-only permissions on macOS and Steam API key masked and not stored
+- Manual session controls and automatic game process detection, polled every 10 seconds
+- Optional per-game executable names for process detection (comma-separated for alternate names)
+- Persistent session records, with progress saved during play and interrupted sessions recovered at the last saved checkpoint
+- Manual historical-hour entry for platforms without an accessible playtime API
+- Steam lifetime playtime import through Steam's `GetOwnedGames` Web API
+- Background operation via the system tray where supported; closing the window hides it, and the tray menu can reopen or quit the app
+- Local game data stored in your macOS Application Support folder with owner-only directory and database permissions
+- Steam Web API key is masked while entered and is not saved by the app; requests to Steam use HTTPS
 
 ## Platform and data limitations
 
-- Requires JDK 17+ and Maven 3.9+ to build from source. GitHub Actions creates separate Apple Silicon and Intel Mac downloads and a Windows x64 download.
-- Process detection matches the running executable name to the game name or an optional configured process name. Some games need a custom process name.
-- Steam import needs an API key, SteamID64, and profile visibility that permits owned-game data. Other launchers may require manual hours.
-- Weekly/monthly statistics count sessions tracked by this app, not imported historical hours whose dates are unknown.
-- Games from multiple launchers are not automatically merged. Reconcile duplicates to avoid double counting.
-- Local permissions do not protect from malware or someone using your unlocked account. Enable FileVault for stronger protection at rest.
-- Downloads are not code-signed. macOS may require Control-click > Open on first launch; Windows may show a SmartScreen warning.
+- Requires JDK 17+ and Maven 3.9+ to build from source. JavaFX binaries are selected for the architecture running Maven. The packaging workflow creates separate Apple Silicon and Intel macOS downloads, plus a Windows x64 download.
+- Automatic detection matches a running process's executable name to the game name or the optional process name configured for that game. Some games expose a different binary name or run through helper processes; configure the executable name in **Add game** when needed. macOS privacy settings or process permissions may limit detection.
+- Steam import needs a Steam Web API key, SteamID64, and profile visibility that permits owned-game data. EA, Battle.net, Epic Games, and other launchers do not provide a universal public API for account-wide lifetime playtime; enter those values manually.
+- Weekly/monthly statistics count sessions tracked by this app, not historical/imported hours whose original dates are unknown.
+- Game rows from different launchers are not automatically merged. Avoid duplicate rows or reconcile their hours manually to prevent double counting.
+- Local file permissions help protect data from other standard macOS user accounts, but do not protect it from malware, administrator/root access, or someone using your unlocked macOS account. Enable FileVault and use a strong Mac login password for stronger protection at rest.
+- The macOS disk images and Windows app archive are not code-signed. macOS may require Control-clicking the app and choosing **Open** the first time; Windows may show a SmartScreen warning.
 
 ## Run from source
 
@@ -29,22 +31,23 @@ A dark-themed Java desktop dashboard for combining gaming playtime across launch
 mvn javafx:run
 ```
 
-The database is stored in the user's application data folder: ~/Library/Application Support/GameTracker on macOS, %APPDATA%\GameTracker on Windows, and $XDG_DATA_HOME/gametracker (or ~/.local/share/gametracker) on Linux. An existing game-tracker.db in the working directory is moved there on first launch.
+The SQLite database is stored in the user's application data folder: `~/Library/Application Support/GameTracker` on macOS, `%APPDATA%\GameTracker` on Windows, and `$XDG_DATA_HOME/gametracker` (or `~/.local/share/gametracker`) on Linux. On first launch, an existing `game-tracker.db` in the current working directory is moved into that folder.
 
 ## Downloadable builds
 
-[Download for Mac (Apple Silicon)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.0-macOS-arm64.dmg)<br>
-[Download for Mac (Intel)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.0-macOS-x86_64.dmg)<br>
-[Download for Windows (64-bit)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.0-Windows-x64.zip)
+[Download for Mac (Apple Silicon)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.1-macOS-arm64.dmg) ·
+[Download for Mac (Intel)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.1-macOS-x86_64.dmg) ·
+[Download for Windows (64-bit)](https://github.com/DearingK12/GameTracker/releases/latest/download/GameTracker-1.0.1-Windows-x64.zip)
 
-These links download files from the latest GitHub release. The first release is built from the v1.0.0 tag. For later versions, push a new version tag. You can also run Package desktop downloads from the repository Actions tab to create workflow artifacts.
+These links download the latest release files directly. The first release is created by pushing a version tag such as `v1.0.1`; after that, use a new version for subsequent releases. You can also run **Package desktop downloads** manually from the repository's **Actions** tab; those files are available as workflow artifacts.
 
-To package locally, run scripts/package-macos.sh on macOS or PowerShell -File scripts/package-windows.ps1 on Windows. The Windows ZIP contains a self-contained app image; extract it and launch GameTracker.exe. The Mac disk image shows a title and an arrow pointing from the app to Applications.
+To package locally, run `bash scripts/package-macos.sh` on macOS or `.\scripts\package-windows.ps1` on Windows. The Windows archive contains a self-contained app image; extract it and launch `GameTracker.exe`.
+The Mac disk image opens to a custom install screen titled **Game Tracker**, with an arrow showing where to drag the app: the **Applications** folder.
 
 ## Steam setup
 
 1. Create a Steam Web API key from Steam's official API key page.
 2. Find your SteamID64.
-3. Choose Import Steam hours in the app and enter both values.
+3. In the app, choose **Import Steam hours** and enter both values.
 
 The app does not save the API key. Keep it private.
